@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "smoke:api": "node scripts/api-smoke-test.mjs",
+    "smoke:api:clean": "node scripts/api-smoke-test.mjs --delete"
   },
   "dependencies": {
     "mongodb": "^6.21.0",

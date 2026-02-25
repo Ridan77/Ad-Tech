@@ -69,3 +69,7 @@ Implement Next.js API routes for client CRUD using the existing services:
 - Validation errors are clear and deterministic
 - Response format is consistent across all handlers
 - Lint and typecheck pass
+
+## Status
+- Implemented in code
+- Verified with lint + typecheck
