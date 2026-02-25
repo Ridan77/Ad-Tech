@@ -20,7 +20,7 @@ Implement:
   - `name`, `phone`, `petName`, `petBirthDate`, `petType`
   - optional `notes`
 
-2. Add Mongo connection utility in `src/lib/db.ts`
+2. Add Mongo connection utility in `src/services/db.service.ts`
 - Read `MONGODB_URI` from env
 - Cache connection in global scope to avoid hot-reload reconnect storms
 - Export `connectToDatabase()` from `src/services/db.service.ts`
@@ -70,3 +70,7 @@ Implement:
 ## Notes
 - This item does not include API route handlers yet (that is Delivery Workflow item 3)
 - Keep implementation TypeScript-only and aligned with current lint/format rules
+
+## Status
+- Implemented in code
+- Pending environment step: install `mongodb` package (currently blocked by local npm offline cache mode)

@@ -11,7 +11,7 @@ Build an interview-ready Pet Clinic client management app with:
 
 ## 2) Proposed Stack
 - Framework: Next.js 14+ (TypeScript, App Router)
-- Data: MongoDB Atlas + Mongoose
+- Data: MongoDB Atlas + MongoDB native driver
 - State/API caching: TanStack React Query
 - Table: TanStack React Table
 - UI: MUI (Modal/Dialog, Buttons, Inputs, Icons)
@@ -80,15 +80,16 @@ All handlers:
 - `app/api/clients/route.ts`
 - `app/api/clients/[id]/route.ts`
 - `components/*`
-- `lib/db.ts`
-- `lib/models/Client.ts`
+- `services/db.service.ts`
+- `services/client.service.ts`
+- `services/client-validation.service.ts`
 - `lib/api/clientApi.ts`
 - `hooks/useClients.ts`
 - `types/client.ts`
 
 ## 8) Delivery Workflow
 1. Bootstrap project + Tailwind + lint/format config - DONE
-2. Mongo connection + model + request validation helpers
+2. Mongo connection + model + request validation helpers - DONE (mongodb package install pending due offline npm cache mode)
 3. API routes
 4. React Query integration
 5. Table + modal UI
