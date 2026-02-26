@@ -1,23 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 import { validateClientPayload } from '@/services/client-validation.service'
 import { GetClients, addClient } from '@/services/client.service'
-import { ApiFailure, ApiSuccess } from '@/types/api'
+import { failure, success } from '@/lib/api/route-response'
+import { getErrorMessage } from '@/lib/api/route-errors'
 import { ClientRecord, PetType } from '@/types/client'
 
 const allowedPetTypes: PetType[] = ['dog', 'cat', 'parrot']
-
-function success<TData>(data: TData, status = 200) {
-  const body: ApiSuccess<TData> = { data, error: null }
-  return NextResponse.json(body, { status })
-}
-
-function failure(message: string, status: number, details?: string[]) {
-  const body: ApiFailure = {
-    data: null,
-    error: { message, details }
-  }
-  return NextResponse.json(body, { status })
-}
 
 function parsePetType(value: string | null): PetType | undefined {
   if (!value) {
@@ -29,14 +17,6 @@ function parsePetType(value: string | null): PetType | undefined {
   }
 
   return value as PetType
-}
-
-function getErrorMessage(error: unknown): string {
-  if (error instanceof Error) {
-    return error.message
-  }
-
-  return 'Unknown error'
 }
 
 export async function GET(request: NextRequest) {

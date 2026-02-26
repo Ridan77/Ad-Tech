@@ -1,36 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 import { validateClientUpdatePayload } from '@/services/client-validation.service'
 import { getClientById, removeClient, updateClient } from '@/services/client.service'
-import { ApiFailure, ApiSuccess } from '@/types/api'
+import { failure, success } from '@/lib/api/route-response'
+import { getErrorMessage, isInvalidIdError } from '@/lib/api/route-errors'
 import { ClientRecord } from '@/types/client'
 
 type RouteParams = {
   params: Promise<{ id: string }>
-}
-
-function success<TData>(data: TData, status = 200) {
-  const body: ApiSuccess<TData> = { data, error: null }
-  return NextResponse.json(body, { status })
-}
-
-function failure(message: string, status: number, details?: string[]) {
-  const body: ApiFailure = {
-    data: null,
-    error: { message, details }
-  }
-  return NextResponse.json(body, { status })
-}
-
-function getErrorMessage(error: unknown): string {
-  if (error instanceof Error) {
-    return error.message
-  }
-
-  return 'Unknown error'
-}
-
-function isInvalidIdError(error: unknown): boolean {
-  return error instanceof Error && error.message.toLowerCase().includes('invalid client id')
 }
 
 export async function GET(_request: NextRequest, context: RouteParams) {

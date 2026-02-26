@@ -13,6 +13,8 @@
     "smoke:api:clean": "node scripts/api-smoke-test.mjs --delete"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.66.9",
+    "@tanstack/react-query-devtools": "^5.66.9",
     "mongodb": "^6.21.0",
     "next": "^15.2.0",
     "react": "^19.0.0",
