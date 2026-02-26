@@ -4,12 +4,65 @@
 
 :root {
   color-scheme: light;
+  --ui-border: #cbd5e1;
+  --ui-border-soft: #e2e8f0;
+  --ui-surface: #ffffff;
+  --ui-surface-soft: #f8fafc;
 }
 
 body {
   @apply bg-canvas text-ink antialiased;
+  font-family: 'Segoe UI', Arial, sans-serif;
 }
 
-.green{
-  background-color: green;
+.surface-card {
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border-soft);
+  border-radius: 1rem;
+}
+
+.motion-fade-up {
+  animation: fade-up 220ms ease-out;
+}
+
+.motion-fade-in {
+  animation: fade-in 180ms ease-out;
+}
+
+.action-hover {
+  transition: transform 120ms ease, opacity 120ms ease;
+}
+
+.action-hover:hover {
+  transform: translateY(-1px);
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-fade-up,
+  .motion-fade-in,
+  .action-hover {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
 }

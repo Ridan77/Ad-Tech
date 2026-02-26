@@ -80,7 +80,12 @@ export function ClientTable({
         cell: ({ row }) => (
           <div className='flex items-center gap-1'>
             <Tooltip title='Edit'>
-              <IconButton size='small' onClick={() => onEdit(row.original)} aria-label='edit'>
+              <IconButton
+                size='small'
+                onClick={() => onEdit(row.original)}
+                aria-label='edit'
+                className='action-hover'
+              >
                 <EditOutlinedIcon fontSize='small' />
               </IconButton>
             </Tooltip>
@@ -90,6 +95,7 @@ export function ClientTable({
                 onClick={() => onDelete(row.original)}
                 aria-label='delete'
                 color='error'
+                className='action-hover'
               >
                 <DeleteOutlineIcon fontSize='small' />
               </IconButton>
@@ -108,24 +114,32 @@ export function ClientTable({
   })
 
   if (isLoading) {
-    return <p className='rounded-2xl border border-slate-200 bg-white p-8 text-sm text-slate-600'>Loading...</p>
+    return (
+      <p className='surface-card motion-fade-in p-8 text-sm text-slate-600'>
+        Loading patients...
+      </p>
+    )
   }
 
   if (isError) {
     return (
-      <p className='rounded-2xl border border-red-200 bg-red-50 p-8 text-sm text-danger'>
+      <p className='motion-fade-in rounded-2xl border border-red-200 bg-red-50 p-8 text-sm text-danger'>
         {errorMessage || 'Failed to load clients'}
       </p>
     )
   }
 
   if (clients.length === 0) {
-    return <p className='rounded-2xl border border-slate-200 bg-white p-8 text-sm text-slate-600'>No patients found</p>
+    return (
+      <p className='surface-card motion-fade-in p-8 text-sm text-slate-600'>
+        No patients found
+      </p>
+    )
   }
 
   return (
     <>
-      <div className='hidden overflow-hidden rounded-2xl border border-slate-200 bg-white md:block'>
+      <div className='surface-card motion-fade-in hidden overflow-hidden md:block'>
         <table className='w-full table-fixed text-left text-sm'>
           <colgroup>
             <col className='w-[17%]' />
@@ -137,7 +151,7 @@ export function ClientTable({
           </colgroup>
           <tbody>
             {table.getRowModel().rows.map(row => (
-              <tr key={row.id} className='border-t border-slate-200'>
+              <tr key={row.id} className='motion-fade-up border-t border-slate-200 hover:bg-slate-50/60'>
                 {row.getVisibleCells().map(cell => (
                   <td key={cell.id} className='px-4 py-3'>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -151,7 +165,7 @@ export function ClientTable({
 
       <div className='grid gap-3 md:hidden'>
         {clients.map(client => (
-          <div key={client.id} className='rounded-2xl border border-slate-200 bg-white p-4'>
+          <div key={client.id} className='surface-card motion-fade-up p-4'>
             <div className='grid grid-cols-2 gap-2 text-sm'>
               <span className='text-slate-500'>Name</span>
               <span>{client.name}</span>
@@ -166,7 +180,12 @@ export function ClientTable({
             </div>
             <div className='mt-4 flex items-center gap-1'>
               <Tooltip title='Edit'>
-                <IconButton size='small' onClick={() => onEdit(client)} aria-label='edit'>
+                <IconButton
+                  size='small'
+                  onClick={() => onEdit(client)}
+                  aria-label='edit'
+                  className='action-hover'
+                >
                   <EditOutlinedIcon fontSize='small' />
                 </IconButton>
               </Tooltip>
@@ -176,6 +195,7 @@ export function ClientTable({
                   onClick={() => onDelete(client)}
                   aria-label='delete'
                   color='error'
+                  className='action-hover'
                 >
                   <DeleteOutlineIcon fontSize='small' />
                 </IconButton>

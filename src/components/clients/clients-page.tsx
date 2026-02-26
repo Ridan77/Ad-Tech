@@ -154,10 +154,10 @@ export function ClientsPage() {
 
   return (
     <main className='mx-auto min-h-screen max-w-6xl p-4 md:p-8'>
-      <section className='grid gap-4 md:gap-6'>
-        <div className='flex flex-col gap-3 rounded-2xl bg-white p-4 shadow-soft md:flex-row md:items-center md:justify-between md:p-8'>
+      <section className='grid gap-4 md:gap-5'>
+        <div className='surface-card motion-fade-up flex flex-col gap-3 p-4 shadow-soft md:flex-row md:items-center md:justify-between md:p-6'>
           <div>
-            <h1 className='text-2xl font-semibold text-brand-700'>Pet Clinic Management</h1>
+            <h1 className='text-2xl font-semibold tracking-tight text-brand-700'>Pet Clinic Management</h1>
             <p className='mt-1 text-sm text-slate-600'>Manage clinic patients in one place</p>
           </div>
           <Button type='button' onClick={onOpenAddModal} variant='contained'>

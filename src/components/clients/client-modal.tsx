@@ -105,7 +105,14 @@ export function ClientModal({
   }
 
   return (
-    <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth='sm'>
+    <Dialog
+      open={isOpen}
+      onClose={onClose}
+      fullWidth
+      maxWidth='sm'
+      transitionDuration={{ enter: 180, exit: 120 }}
+      PaperProps={{ className: 'motion-fade-in' }}
+    >
       <DialogTitle>{modalTitle}</DialogTitle>
       <form onSubmit={onFormSubmit}>
         <DialogContent dividers>

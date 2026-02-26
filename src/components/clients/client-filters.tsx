@@ -58,7 +58,7 @@ export function ClientFiltersPanel({ value, onChange, onClear }: ClientFiltersPr
   const firstHeaderGroup = table.getHeaderGroups()[0]
 
   return (
-    <div className='overflow-hidden rounded-2xl border border-slate-300 bg-white'>
+    <div className='surface-card motion-fade-in overflow-hidden'>
       <div className='hidden md:block'>
         <table className='w-full table-fixed border-collapse text-left text-sm'>
           <colgroup>
@@ -71,7 +71,7 @@ export function ClientFiltersPanel({ value, onChange, onClear }: ClientFiltersPr
           </colgroup>
           <thead className='text-slate-700'>
             {table.getHeaderGroups().map(headerGroup => (
-              <tr key={headerGroup.id} className='bg-slate-50'>
+              <tr key={headerGroup.id} className='bg-slate-50/80'>
                 {headerGroup.headers.map(header => (
                   <th
                     key={header.id}
@@ -85,7 +85,7 @@ export function ClientFiltersPanel({ value, onChange, onClear }: ClientFiltersPr
               </tr>
             ))}
             {firstHeaderGroup && (
-              <tr className='border-t border-slate-200'>
+              <tr className='border-t border-slate-200 bg-white'>
                 {firstHeaderGroup.headers.map(header => {
                   if (header.id === 'name') {
                     return (

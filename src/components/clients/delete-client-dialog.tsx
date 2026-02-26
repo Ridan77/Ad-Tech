@@ -24,7 +24,14 @@ export function DeleteClientDialog({
   }
 
   return (
-    <Dialog open={isOpen} onClose={onCancel} fullWidth maxWidth='xs'>
+    <Dialog
+      open={isOpen}
+      onClose={onCancel}
+      fullWidth
+      maxWidth='xs'
+      transitionDuration={{ enter: 180, exit: 120 }}
+      PaperProps={{ className: 'motion-fade-in' }}
+    >
       <DialogTitle>Delete patient</DialogTitle>
       <DialogContent dividers>
         <p className='text-sm text-slate-700'>
