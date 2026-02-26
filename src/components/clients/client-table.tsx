@@ -21,18 +21,25 @@ type ClientTableProps = {
   onDelete: (client: ClientRecord) => void
 }
 
-function getPetAge(birthDate: Date): number {
+function getPetAge(birthDate: Date): string {
   const now = new Date()
-  let age = now.getFullYear() - birthDate.getFullYear()
-  const monthDiff = now.getMonth() - birthDate.getMonth()
-  const hasHadBirthday =
-    monthDiff > 0 || (monthDiff === 0 && now.getDate() >= birthDate.getDate())
+  let years = now.getFullYear() - birthDate.getFullYear()
+  let months = now.getMonth() - birthDate.getMonth()
 
-  if (!hasHadBirthday) {
-    age -= 1
+  if (now.getDate() < birthDate.getDate()) {
+    months -= 1
   }
 
-  return Math.max(age, 0)
+  if (months < 0) {
+    years -= 1
+    months += 12
+  }
+
+  if (years < 0) {
+    return '0.0'
+  }
+
+  return `${years}.${months}`
 }
 
 export function ClientTable({

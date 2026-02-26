@@ -2,10 +2,60 @@
 
 const baseUrl = process.env.API_BASE_URL || 'http://localhost:3000'
 const shouldDelete = process.argv.includes('--delete')
+const seedIndex = process.argv.indexOf('--seed')
+const seedCount = seedIndex > -1 ? Number(process.argv[seedIndex + 1] || '20') : 0
 
 const headers = {
   'Content-Type': 'application/json'
 }
+
+const funnyOwners = [
+  'Captain Whiskerbeard',
+  'Sir Barksalot',
+  'Lady Meowington',
+  'Professor Fluff',
+  'Count Droolula',
+  'Noodle McSniff',
+  'Pickle von Paws',
+  'Biscuit Thunder',
+  'Duke Wigglebottom',
+  'Sassy Pants',
+  'Cheddar McZoom',
+  'Muffin Stardust',
+  'Banjo Sprinkles',
+  'Chaos Potato',
+  'Yeti McFuzzy',
+  'Tofu Rocket',
+  'Pancake Ninja',
+  'Waffle Bandit',
+  'Taco Stardog',
+  'Fuzzy McGee'
+]
+
+const funnyPets = [
+  'Borkzilla',
+  'Meowzart',
+  'Fluffernutter',
+  'Captain Snoot',
+  'Biscotti',
+  'Chewbecca',
+  'Purrito',
+  'Nugget',
+  'Wiggles',
+  'Ziggy Zoom',
+  'Sir Hops',
+  'Pickles',
+  'Donut',
+  'Nacho',
+  'Mochi',
+  'Tater Tot',
+  'Snickers',
+  'Boop',
+  'Crouton',
+  'Bubbles'
+]
+
+const petTypes = ['dog', 'cat', 'parrot']
 
 function logStep(title, data) {
   console.log(`\n[${title}]`)
@@ -25,7 +75,59 @@ async function callApi(path, options = {}) {
   return body
 }
 
+function formatPhone(index) {
+  const middleDigit = index % 10
+  const lastSeven = String((index * 7919) % 10000000).padStart(7, '0')
+  return `05${middleDigit}-${lastSeven}`
+}
+
+function makeBirthDate(index) {
+  const year = 2014 + (index % 10)
+  const month = String((index % 12) + 1).padStart(2, '0')
+  const day = String(((index * 3) % 28) + 1).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+function buildSeedPayload(index) {
+  const owner = funnyOwners[index % funnyOwners.length]
+  const pet = funnyPets[index % funnyPets.length]
+  const petType = petTypes[index % petTypes.length]
+
+  return {
+    name: owner,
+    phone: formatPhone(index + 100),
+    petName: pet,
+    petBirthDate: makeBirthDate(index),
+    petType,
+    notes: `demo seed #${index + 1}`
+  }
+}
+
+async function runSeed(count) {
+  const total = Number.isFinite(count) && count > 0 ? Math.floor(count) : 20
+  console.log(`Seeding ${total} demo clients via API at ${baseUrl}`)
+
+  for (let index = 0; index < total; index += 1) {
+    const payload = buildSeedPayload(index)
+    const created = await callApi('/api/clients', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(payload)
+    })
+    console.log(`Created ${index + 1}/${total}: ${created?.data?.name} -> ${created?.data?.petName}`)
+  }
+
+  const listed = await callApi('/api/clients')
+  logStep('SEEDED_TOTAL', { count: listed?.data?.length || 0 })
+  console.log('\nSeed completed successfully')
+}
+
 async function run() {
+  if (seedCount > 0) {
+    await runSeed(seedCount)
+    return
+  }
+
   console.log(`Running API smoke test against ${baseUrl}`)
 
   const createPayload = {
