@@ -92,7 +92,7 @@ All handlers:
 2. Mongo connection + model + request validation helpers - DONE (mongodb package install pending due offline npm cache mode)
 3. API routes - DONE
 4. React Query integration - DONE (typecheck pending until TanStack packages are installed)
-5. Table + modal UI
+5. Table + modal UI - DONE
 6. Responsive polish + animation
 7. QA pass + seed data
 8. README + screenshots + architecture notes

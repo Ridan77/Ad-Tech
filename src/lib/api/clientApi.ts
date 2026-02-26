@@ -24,8 +24,10 @@ function buildQueryString(filters: ClientFilters): string {
   if (filters.petName) {
     params.set('petName', filters.petName)
   }
-  if (filters.petType) {
-    params.set('petType', filters.petType)
+  if (filters.petTypes && filters.petTypes.length > 0) {
+    for (const petType of filters.petTypes) {
+      params.append('petType', petType)
+    }
   }
 
   const query = params.toString()

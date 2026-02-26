@@ -38,8 +38,8 @@ function buildFilters(filters: ClientFilters): Filter<ClientDocument> {
     query.petName = { $regex: filters.petName, $options: 'i' }
   }
 
-  if (filters.petType) {
-    query.petType = filters.petType
+  if (filters.petTypes && filters.petTypes.length > 0) {
+    query.petType = { $in: filters.petTypes }
   }
 
   return query

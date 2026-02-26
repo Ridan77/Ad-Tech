@@ -19,20 +19,42 @@ function parsePetType(value: string | null): PetType | undefined {
   return value as PetType
 }
 
+function parsePetTypes(values: string[]): PetType[] | null {
+  const expanded = values
+    .flatMap(value => value.split(','))
+    .map(value => value.trim())
+    .filter(Boolean)
+
+  const parsed: PetType[] = []
+
+  for (const value of expanded) {
+    const petType = parsePetType(value)
+    if (!petType) {
+      return null
+    }
+    if (!parsed.includes(petType)) {
+      parsed.push(petType)
+    }
+  }
+
+  return parsed
+}
+
 export async function GET(request: NextRequest) {
   try {
     const name = request.nextUrl.searchParams.get('name')?.trim() || undefined
     const petName = request.nextUrl.searchParams.get('petName')?.trim() || undefined
-    const petTypeRaw = request.nextUrl.searchParams.get('petType')?.trim() || null
+    const petTypeRawValues = request.nextUrl.searchParams.getAll('petType')
+    const parsedPetTypes = parsePetTypes(petTypeRawValues)
 
-    if (petTypeRaw && !parsePetType(petTypeRaw)) {
+    if (petTypeRawValues.length > 0 && !parsedPetTypes) {
       return failure('Invalid petType filter', 400, ['petType must be one of: dog, cat, parrot'])
     }
 
     const clients = await GetClients({
       name,
       petName,
-      petType: parsePetType(petTypeRaw)
+      petTypes: parsedPetTypes || undefined
     })
 
     return success<ClientRecord[]>(clients)

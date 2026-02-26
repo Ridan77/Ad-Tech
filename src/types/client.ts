@@ -18,5 +18,5 @@ export interface ClientRecord extends ClientInput {
 export interface ClientFilters {
   name?: string
   petName?: string
-  petType?: PetType
+  petTypes?: PetType[]
 }

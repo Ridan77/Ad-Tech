@@ -13,6 +13,11 @@
     "smoke:api:clean": "node scripts/api-smoke-test.mjs --delete"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^7.0.2",
+    "@mui/material": "^7.0.2",
+    "@tanstack/react-table": "^8.21.3",
     "@tanstack/react-query": "^5.66.9",
     "@tanstack/react-query-devtools": "^5.66.9",
     "mongodb": "^6.21.0",
