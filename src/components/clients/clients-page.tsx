@@ -2,7 +2,12 @@
 
 import { Button } from '@mui/material'
 import { useEffect, useMemo, useState } from 'react'
-import { ClientFilters, ClientRecord } from '@/types/client'
+import {
+  ClientFilters,
+  ClientRecord,
+  ClientSortBy,
+  ClientSortDirection
+} from '@/types/client'
 import { useClientsQuery } from '@/hooks/use-clients-query'
 import { useClientMutations } from '@/hooks/use-client-mutations'
 import { ClientFiltersPanel } from '@/components/clients/client-filters'
@@ -33,9 +38,16 @@ function normalizeFilters(filters: ClientFilters): ClientFilters {
   }
 }
 
+function compareStrings(left: string, right: string): number {
+  if (left === right) return 0
+  return left > right ? 1 : -1
+}
+
 export function ClientsPage() {
   const [filters, setFilters] = useState<ClientFilters>({})
   const [debouncedFilters, setDebouncedFilters] = useState<ClientFilters>({})
+  const [sortBy, setSortBy] = useState<ClientSortBy>(null)
+  const [sortDirection, setSortDirection] = useState<ClientSortDirection>('asc')
   const [modalState, setModalState] = useState<ModalState>({
     mode: 'add',
     isOpen: false,
@@ -57,6 +69,29 @@ export function ClientsPage() {
 
   const clientsQuery = useClientsQuery(debouncedFilters)
   const clients = useMemo(() => clientsQuery.data || [], [clientsQuery.data])
+  const sortedClients = useMemo(() => {
+    if (!sortBy) {
+      return clients
+    }
+
+    const directionFactor = sortDirection === 'asc' ? 1 : -1
+
+    return clients
+      .map((client, index) => ({ client, index }))
+      .sort((left, right) => {
+        const leftValue = left.client[sortBy]
+        const rightValue = right.client[sortBy]
+        const byField = compareStrings(leftValue, rightValue)
+
+        if (byField !== 0) {
+          return byField * directionFactor
+        }
+
+        // Stable fallback for equal values
+        return left.index - right.index
+      })
+      .map(item => item.client)
+  }, [clients, sortBy, sortDirection])
 
   const onOpenAddModal = () => {
     setSubmitError(null)
@@ -152,6 +187,22 @@ export function ClientsPage() {
     setFilters({})
   }
 
+  const onSortToggle = (column: Exclude<ClientSortBy, null>) => {
+    if (sortBy !== column) {
+      setSortBy(column)
+      setSortDirection('asc')
+      return
+    }
+
+    if (sortDirection === 'asc') {
+      setSortDirection('desc')
+      return
+    }
+
+    setSortBy(null)
+    setSortDirection('asc')
+  }
+
   return (
     <main className='mx-auto min-h-screen max-w-6xl p-4 md:p-8'>
       <section className='grid gap-4 md:gap-5'>
@@ -165,10 +216,17 @@ export function ClientsPage() {
           </Button>
         </div>
 
-        <ClientFiltersPanel value={filters} onChange={setFilters} onClear={onClearFilters} />
+        <ClientFiltersPanel
+          value={filters}
+          onChange={setFilters}
+          onClear={onClearFilters}
+          sortBy={sortBy}
+          sortDirection={sortDirection}
+          onSortToggle={onSortToggle}
+        />
 
         <ClientTable
-          clients={clients}
+          clients={sortedClients}
           isLoading={clientsQuery.isLoading}
           isError={clientsQuery.isError}
           errorMessage={clientsQuery.isError ? getErrorMessage(clientsQuery.error) : undefined}

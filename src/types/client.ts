@@ -20,3 +20,6 @@ export interface ClientFilters {
   petName?: string
   petTypes?: PetType[]
 }
+
+export type ClientSortBy = 'name' | 'petName' | null
+export type ClientSortDirection = 'asc' | 'desc'

@@ -1,8 +1,12 @@
 'use client'
 
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
+import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore'
 import {
   Button,
+  ButtonBase,
   Checkbox,
   FormControl,
   InputLabel,
@@ -12,12 +16,15 @@ import {
   TextField
 } from '@mui/material'
 import { useMemo } from 'react'
-import { ClientFilters, PetType } from '@/types/client'
+import { ClientFilters, ClientSortBy, ClientSortDirection, PetType } from '@/types/client'
 
 type ClientFiltersProps = {
   value: ClientFilters
   onChange: (value: ClientFilters) => void
   onClear: () => void
+  sortBy: ClientSortBy
+  sortDirection: ClientSortDirection
+  onSortToggle: (column: 'name' | 'petName') => void
 }
 
 const petTypeOptions: PetType[] = ['dog', 'cat', 'parrot']
@@ -31,7 +38,22 @@ const compactSx = {
   }
 }
 
-export function ClientFiltersPanel({ value, onChange, onClear }: ClientFiltersProps) {
+function SortIcon({ active, direction }: { active: boolean; direction: ClientSortDirection }) {
+  if (!active) {
+    return <UnfoldMoreIcon sx={{ fontSize: 16 }} />
+  }
+
+  return direction === 'asc' ? <ArrowDropUpIcon sx={{ fontSize: 18 }} /> : <ArrowDropDownIcon sx={{ fontSize: 18 }} />
+}
+
+export function ClientFiltersPanel({
+  value,
+  onChange,
+  onClear,
+  sortBy,
+  sortDirection,
+  onSortToggle
+}: ClientFiltersProps) {
   const onNameChange = (name: string) => onChange({ ...value, name })
   const onPetNameChange = (petName: string) => onChange({ ...value, petName })
   const onPetTypesChange = (petTypes: PetType[]) =>
@@ -75,11 +97,29 @@ export function ClientFiltersPanel({ value, onChange, onClear }: ClientFiltersPr
                 {headerGroup.headers.map(header => (
                   <th
                     key={header.id}
-                    className='px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-600'
+                    className='px-4 py-2 text-xs font-semibold  tracking-wide text-slate-600'
                   >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(header.column.columnDef.header, header.getContext())}
+                    {header.isPlaceholder ? null : (
+                      <div className='flex items-center gap-1'>
+                        {(header.id === 'name' || header.id === 'petName') && (
+                          <ButtonBase
+                            onClick={() => onSortToggle(header.id as 'name' | 'petName')}
+                            className='group flex items-center gap-1 rounded px-1 py-0.5 text-left'
+                          >
+                            <span>{flexRender(header.column.columnDef.header, header.getContext())}</span>
+                            <span className='text-slate-500 group-hover:text-slate-700'>
+                              <SortIcon
+                                active={sortBy === header.id}
+                                direction={sortDirection}
+                              />
+                            </span>
+                          </ButtonBase>
+                        )}
+                        {header.id !== 'name' && header.id !== 'petName' && (
+                          <span>{flexRender(header.column.columnDef.header, header.getContext())}</span>
+                        )}
+                      </div>
+                    )}
                   </th>
                 ))}
               </tr>
