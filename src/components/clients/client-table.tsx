@@ -163,43 +163,49 @@ export function ClientTable({
         </table>
       </div>
 
-      <div className='grid gap-3 md:hidden'>
+      <div className='grid gap-3 md:hidden [grid-template-columns:repeat(auto-fit,minmax(240px,1fr))]'>
         {clients.map(client => (
           <div key={client.id} className='surface-card motion-fade-up p-4'>
-            <div className='grid grid-cols-2 gap-2 text-sm'>
-              <span className='text-slate-500'>Name</span>
-              <span>{client.name}</span>
-              <span className='text-slate-500'>Phone</span>
-              <span>{client.phone}</span>
-              <span className='text-slate-500'>Pet Name</span>
-              <span>{client.petName}</span>
-              <span className='text-slate-500'>Pet Age</span>
-              <span>{getPetAge(client.petBirthDate)}</span>
-              <span className='text-slate-500'>Pet Type</span>
-              <span className='capitalize'>{client.petType}</span>
-            </div>
-            <div className='mt-4 flex items-center gap-1'>
-              <Tooltip title='Edit'>
-                <IconButton
-                  size='small'
-                  onClick={() => onEdit(client)}
-                  aria-label='edit'
-                  className='action-hover'
-                >
-                  <EditOutlinedIcon fontSize='small' />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title='Delete'>
-                <IconButton
-                  size='small'
-                  onClick={() => onDelete(client)}
-                  aria-label='delete'
-                  color='error'
-                  className='action-hover'
-                >
-                  <DeleteOutlineIcon fontSize='small' />
-                </IconButton>
-              </Tooltip>
+            <div className='  grid grid-cols-[68px,1fr,36px] items-end gap-x-3 gap-y-1'>
+              {[
+                ['Name', client.name],
+                ['Phone', client.phone],
+                ['Pet', client.petName],
+                ['Age', getPetAge(client.petBirthDate)],
+                ['Type', client.petType]
+              ].map(([label, value], index) => (
+                <div key={label} className='contents w-254px'>
+                  <span className='text-[10px] font-medium  tracking-wide text-slate-500'>
+                    {label}
+                  </span>
+                  <span className='text-sm text-slate-800 capitalize'>{value}</span>
+                  {index === 0 && (
+                    <div className='row-span-5 h-full flex flex-col justify-center gap-1'>
+                      <Tooltip title='Edit'>
+                        <IconButton
+                          size='small'
+                          onClick={() => onEdit(client)}
+                          aria-label='edit'
+                          className='action-hover'
+                        >
+                          <EditOutlinedIcon fontSize='small' />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title='Delete'>
+                        <IconButton
+                          size='small'
+                          onClick={() => onDelete(client)}
+                          aria-label='delete'
+                          color='error'
+                          className='action-hover'
+                        >
+                          <DeleteOutlineIcon fontSize='small' />
+                        </IconButton>
+                      </Tooltip>
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
         ))}

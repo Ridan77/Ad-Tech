@@ -94,7 +94,7 @@ All handlers:
 4. React Query integration - DONE (typecheck pending until TanStack packages are installed)
 5. Table + modal UI - DONE
 6. Responsive polish + animation - DONE
-7. QA pass + seed data
+7. QA pass + seed data - DONE
 8. README + screenshots + architecture notes
 9. Deploy (Vercel) + MongoDB Atlas env vars
 10. Submit GitHub + live link

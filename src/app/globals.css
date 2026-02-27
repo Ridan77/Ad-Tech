@@ -8,6 +8,7 @@
   --ui-border-soft: #e2e8f0;
   --ui-surface: #ffffff;
   --ui-surface-soft: #f8fafc;
+  --ui-card: #eee8e8;
 }
 
 body {
@@ -16,7 +17,7 @@ body {
 }
 
 .surface-card {
-  background: var(--ui-surface);
+  background: var(--ui-card);
   border: 1px solid var(--ui-border-soft);
   border-radius: 1rem;
 }
@@ -65,4 +66,8 @@ body {
     transition: none !important;
     transform: none !important;
   }
+}
+
+.green{
+  background-color: green;
 }
