@@ -61,7 +61,7 @@ function getErrorMessage(error: unknown): string {
   return 'Unknown error'
 }
 
-export async function GetClients(filters: ClientFilters = {}): Promise<ClientRecord[]> {
+export async function getClients(filters: ClientFilters = {}): Promise<ClientRecord[]> {
   try {
     const collection = await getClientsCollection()
     const query = buildFilters(filters)

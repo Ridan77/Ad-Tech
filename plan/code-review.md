@@ -119,6 +119,8 @@ Update:
 
 7. CSS constants are not fully centralized in Tailwind config as requested.
 
+Status: Resolved.
+
 The task explicitly asked to store CSS constants in `tailwind.config.js`. Some are centralized, but several still live in raw CSS.
 
 - [globals.css](c:\Users\danri\Documents\קודינג אקדמי\Dev\Ad Tech\src\app\globals.css:5) defines `--ui-*` variables.
@@ -127,17 +129,40 @@ The task explicitly asked to store CSS constants in `tailwind.config.js`. Some a
 
 This is both a criteria miss and a maintainability issue.
 
+Update:
+- This was addressed during the earlier styling consolidation work.
+- Shared visual tokens now live in [tailwind.config.ts](c:\Users\danri\Documents\קודינג אקדמי\Dev\Ad Tech\tailwind.config.ts), including:
+  - font family
+  - surface colors
+  - stroke colors
+  - animation keyframes and durations
+- The old custom CSS variables were removed from [globals.css](c:\Users\danri\Documents\קודינג אקדמי\Dev\Ad Tech\src\app\globals.css).
+- Existing global utility-like class names were preserved, but they now resolve through Tailwind theme tokens instead of a separate CSS variable source of truth.
+
 8. There is leftover dead code in global styles.
+
+Status: Resolved.
 
 - [globals.css](c:\Users\danri\Documents\קודינג אקדמי\Dev\Ad Tech\src\app\globals.css:71) defines `.green`, which appears to be a debug artifact.
 
 This is minor, but dead code in a submission repo weakens perceived quality.
 
+Update:
+- The leftover debug `.green` class was already removed from [globals.css](c:\Users\danri\Documents\קודינג אקדמי\Dev\Ad Tech\src\app\globals.css) during the earlier global-style cleanup.
+- No further action was required for this item.
+
 9. Naming consistency in the service layer is off.
+
+Status: Resolved.
 
 - [client.service.ts](c:\Users\danri\Documents\קודינג אקדמי\Dev\Ad Tech\src\services\client.service.ts:58) exports `GetClients` in PascalCase, while sibling functions use camelCase (`getClientById`, `addClient`, `updateClient`, `removeClient`).
 
 Not a functional bug, but for clean, reusable, and DRY code, naming consistency matters.
+
+Update:
+- `GetClients` was renamed to `getClients` in [client.service.ts](c:\Users\danri\Documents\קודינג אקדמי\Dev\Ad Tech\src\services\client.service.ts).
+- The API route import and usage were updated in [route.ts](c:\Users\danri\Documents\קודינג אקדמי\Dev\Ad Tech\src\app\api\clients\route.ts).
+- The service layer naming is now consistent with the rest of the module.
 
 ## Open Questions / Assumptions
 

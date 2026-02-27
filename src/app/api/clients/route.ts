@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 import { validateClientPayload } from '@/services/client-validation.service'
-import { GetClients, addClient } from '@/services/client.service'
+import { addClient, getClients } from '@/services/client.service'
 import { failure, success } from '@/lib/api/route-response'
 import { getErrorMessage } from '@/lib/api/route-errors'
 import { ClientRecord, PetType } from '@/types/client'
@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
       return failure('Invalid petType filter', 400, ['petType must be one of: dog, cat, parrot'])
     }
 
-    const clients = await GetClients({
+    const clients = await getClients({
       name,
       petName,
       petTypes: parsedPetTypes || undefined
