@@ -2,7 +2,7 @@
 
 ## General
 
-When responding to the user always start with Hopa!
+When responding to the user always start with Si Senior!
 
 ## Planning
 
