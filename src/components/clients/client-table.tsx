@@ -1,5 +1,6 @@
 'use client'
 
+import { Fragment, useMemo } from 'react'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import { IconButton, Tooltip } from '@mui/material'
@@ -9,7 +10,6 @@ import {
   getCoreRowModel,
   useReactTable
 } from '@tanstack/react-table'
-import { useMemo } from 'react'
 import { ClientTableColGroup, clientTableColumns } from '@/components/clients/client-table-config'
 import { ClientRecord } from '@/types/client'
 
@@ -164,7 +164,7 @@ export function ClientTable({
       <div className='grid gap-3 md:hidden [grid-template-columns:repeat(auto-fit,minmax(240px,1fr))]'>
         {clients.map(client => (
           <div key={client.id} className='surface-card motion-fade-up p-4'>
-            <div className='  grid grid-cols-[68px,1fr,36px] items-end gap-x-3 gap-y-1'>
+            <div className='grid grid-cols-[68px,1fr,36px] items-end gap-x-3 gap-y-1'>
               {[
                 ['Name', client.name],
                 ['Phone', client.phone],
@@ -172,7 +172,7 @@ export function ClientTable({
                 ['Age', getPetAge(client.petBirthDate)],
                 ['Type', client.petType]
               ].map(([label, value], index) => (
-                <div key={label} className='contents w-254px'>
+                <Fragment key={label}>
                   <span className='text-[10px] font-medium  tracking-wide text-slate-500'>
                     {label}
                   </span>
@@ -202,7 +202,7 @@ export function ClientTable({
                       </Tooltip>
                     </div>
                   )}
-                </div>
+                </Fragment>
               ))}
             </div>
           </div>

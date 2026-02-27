@@ -87,6 +87,75 @@ export function ClientFiltersPanel({
   })
 
   const firstHeaderGroup = table.getHeaderGroups()[0]
+  const renderNameField = () => (
+    <TextField
+      size="small"
+      label="Search Client"
+      value={value.name || ''}
+      onChange={(event) => onNameChange(event.target.value)}
+      sx={compactFieldSx}
+      fullWidth
+    />
+  )
+
+  const renderPetNameField = () => (
+    <TextField
+      size="small"
+      label="Search Pet"
+      value={value.petName || ''}
+      onChange={(event) => onPetNameChange(event.target.value)}
+      sx={compactFieldSx}
+      fullWidth
+    />
+  )
+
+  const renderPetTypeField = (labelId: string, emptyLabel: string) => (
+    <FormControl size="small" fullWidth sx={compactFieldSx}>
+      <InputLabel id={labelId}>Pet Type</InputLabel>
+      <Select
+        labelId={labelId}
+        label="Pet Type"
+        multiple
+        value={value.petTypes || []}
+        onChange={(event) => onPetTypesChange(event.target.value as PetType[])}
+        renderValue={(selected) =>
+          (selected as string[]).length === 0 ? emptyLabel : (selected as string[]).join(', ')
+        }
+      >
+        {petTypeOptions.map((type) => (
+          <MenuItem key={type} value={type}>
+            <Checkbox checked={(value.petTypes || []).includes(type)} size="small" />
+            <ListItemText primary={type} />
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  )
+
+  const renderClearButton = () => (
+    <Button
+      type="button"
+      onClick={onClear}
+      variant="outlined"
+      size="small"
+      sx={subtleOutlineButtonSx}
+    >
+      Clear
+    </Button>
+  )
+
+  const renderSortButton = (column: 'name' | 'petName', label: string) => (
+    <Button
+      type="button"
+      onClick={() => onSortToggle(column)}
+      variant="outlined"
+      size="small"
+      sx={getSortButtonSx(sortBy === column)}
+    >
+      {label}
+      <SortIcon active={sortBy === column} direction={sortDirection} />
+    </Button>
+  )
 
   return (
     <div className="surface-card motion-fade-in overflow-hidden">
@@ -133,14 +202,7 @@ export function ClientFiltersPanel({
                   if (header.id === 'name') {
                     return (
                       <th key={header.id} className="px-4 py-2">
-                        <TextField
-                          size="small"
-                          label="Search Client"
-                          value={value.name || ''}
-                          onChange={(event) => onNameChange(event.target.value)}
-                          sx={compactFieldSx}
-                          fullWidth
-                        />
+                        {renderNameField()}
                       </th>
                     )
                   }
@@ -148,14 +210,7 @@ export function ClientFiltersPanel({
                   if (header.id === 'petName') {
                     return (
                       <th key={header.id} className="px-4 py-2">
-                        <TextField
-                          size="small"
-                          label="Search Pet"
-                          value={value.petName || ''}
-                          onChange={(event) => onPetNameChange(event.target.value)}
-                          sx={compactFieldSx}
-                          fullWidth
-                        />
+                        {renderPetNameField()}
                       </th>
                     )
                   }
@@ -163,31 +218,7 @@ export function ClientFiltersPanel({
                   if (header.id === 'petType') {
                     return (
                       <th key={header.id} className="px-4 py-2">
-                        <FormControl size="small" fullWidth sx={compactFieldSx}>
-                          <InputLabel id="desktop-pet-type-label">Pet Type</InputLabel>
-                          <Select
-                            labelId="desktop-pet-type-label"
-                            label="Pet Type"
-                            multiple
-                            value={value.petTypes || []}
-                            onChange={(event) => onPetTypesChange(event.target.value as PetType[])}
-                            renderValue={(selected) =>
-                              (selected as string[]).length === 0
-                                ? 'All'
-                                : (selected as string[]).join(', ')
-                            }
-                          >
-                            {petTypeOptions.map((type) => (
-                              <MenuItem key={type} value={type}>
-                                <Checkbox
-                                  checked={(value.petTypes || []).includes(type)}
-                                  size="small"
-                                />
-                                <ListItemText primary={type} />
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
+                        {renderPetTypeField('desktop-pet-type-label', 'All')}
                       </th>
                     )
                   }
@@ -195,15 +226,7 @@ export function ClientFiltersPanel({
                   if (header.id === 'actions') {
                     return (
                       <th key={header.id} className="px-4 py-2">
-                        <Button
-                          type="button"
-                          onClick={onClear}
-                          variant="outlined"
-                          size="small"
-                          sx={subtleOutlineButtonSx}
-                        >
-                          Clear
-                        </Button>
+                        {renderClearButton()}
                       </th>
                     )
                   }
@@ -217,78 +240,18 @@ export function ClientFiltersPanel({
       </div>
 
       <div className="grid grid-cols-2 gap-2 p-3 md:hidden">
-        <div className="grid [grid-template-rows:43px_45px] surface-card">
-          <Button
-            type="button"
-            onClick={() => onSortToggle('name')}
-            variant="outlined"
-            size="small"
-            sx={getSortButtonSx(sortBy === 'name')}
-          >
-            Sort by client
-            <SortIcon active={sortBy === 'name'} direction={sortDirection} />
-          </Button>
-          <Button
-            type="button"
-            onClick={() => onSortToggle('petName')}
-            variant="outlined"
-            size="small"
-            sx={getSortButtonSx(sortBy === 'petName')}
-          >
-            Sort by pet
-            <SortIcon active={sortBy === 'petName'} direction={sortDirection} />
-          </Button>
+        <div className="grid gap-2">
+          {renderSortButton('name', 'Sort by client')}
+          {renderSortButton('petName', 'Sort by pet')}
         </div>
 
         <div className="grid gap-2">
-          <TextField
-            size="small"
-            label="Search Client"
-            value={value.name || ''}
-            onChange={(event) => onNameChange(event.target.value)}
-            sx={compactFieldSx}
-            fullWidth
-          />
-          <TextField
-            size="small"
-            label="Search Pet"
-            value={value.petName || ''}
-            onChange={(event) => onPetNameChange(event.target.value)}
-            sx={compactFieldSx}
-            fullWidth
-          />
-
-          <FormControl size="small" fullWidth sx={compactFieldSx}>
-            <InputLabel id="mobile-pet-type-label">Pet Type</InputLabel>
-            <Select
-              labelId="mobile-pet-type-label"
-              label="Pet Type"
-              multiple
-              value={value.petTypes || []}
-              onChange={(event) => onPetTypesChange(event.target.value as PetType[])}
-              renderValue={(selected) =>
-                (selected as string[]).length === 0
-                  ? 'All types'
-                  : (selected as string[]).join(', ')
-              }
-            >
-              {petTypeOptions.map((type) => (
-                <MenuItem key={type} value={type}>
-                  <Checkbox checked={(value.petTypes || []).includes(type)} size="small" />
-                  <ListItemText primary={type} />
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <Button
-            type="button"
-            onClick={onClear}
-            variant="outlined"
-            size="small"
-            sx={subtleOutlineButtonSx}
-          >
-            Clear
-          </Button>
+          {renderNameField()}
+          {renderPetNameField()}
+          <div className="grid grid-cols-2 gap-2">
+            {renderPetTypeField('mobile-pet-type-label', 'All types')}
+            {renderClearButton()}
+          </div>
         </div>
       </div>
     </div>

@@ -88,17 +88,34 @@ Update:
 
 5. The mobile filter implementation still has structural debt and one obvious dead node.
 
+Status: Resolved.
+
 - [client-filters.tsx](c:\Users\danri\Documents\קודינג אקדמי\Dev\Ad Tech\src\components\clients\client-filters.tsx:228) starts a bespoke mobile block separate from the desktop header-table model.
 - [client-filters.tsx](c:\Users\danri\Documents\קודינג אקדמי\Dev\Ad Tech\src\components\clients\client-filters.tsx:282) contains an empty `div` (`grid grid-cols-2 gap-2`) that does nothing.
 
 This is not a blocker, but it is a design and code smell: the mobile layout has become ad hoc and should be tightened before submission.
 
+Update:
+- The empty mobile layout node was removed from [client-filters.tsx](c:\Users\danri\Documents\קודינג אקדמי\Dev\Ad Tech\src\components\clients\client-filters.tsx).
+- The mobile filters are now structured as three explicit 2-column rows:
+  - sort controls
+  - text search fields
+  - pet type and clear action
+- Shared render helpers now reduce repeated JSX for mobile and desktop filter controls, which makes the component less ad hoc and easier to maintain.
+
 6. There is invalid or ineffective styling in the mobile patient card markup.
+
+Status: Resolved.
 
 - [client-table.tsx](c:\Users\danri\Documents\קודינג אקדמי\Dev\Ad Tech\src\components\clients\client-table.tsx:177) uses `w-254px`, which is not a valid Tailwind class.
 - The same node also uses `contents`, which means width would not apply in practice anyway.
 
 This is a concrete implementation defect, even if it currently fails harmlessly.
+
+Update:
+- The invalid `w-254px` class was removed from [client-table.tsx](c:\Users\danri\Documents\קודינג אקדמי\Dev\Ad Tech\src\components\clients\client-table.tsx).
+- The ineffective wrapper with `contents` was replaced by explicit `Fragment` rendering, so the mobile grid now reflects the actual rendered structure.
+- The mobile card grid keeps the same visual layout without relying on ignored or contradictory classes.
 
 7. CSS constants are not fully centralized in Tailwind config as requested.
 
