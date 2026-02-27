@@ -1,7 +1,16 @@
 'use client'
 
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import { FormEvent, useEffect, useMemo, useState } from 'react'
-import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
+import {
+  Alert,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton
+} from '@mui/material'
 import { ClientRecord, PetType } from '@/types/client'
 import { ClientFormFields, ClientFormValues } from '@/components/clients/client-form-fields'
 import { dialogTransitionDuration, subtleOutlineButtonSx } from '@/lib/styles/mui'
@@ -11,9 +20,13 @@ type ClientModalProps = {
   isOpen: boolean
   client: ClientRecord | null
   isSubmitting: boolean
+  isDeleting?: boolean
   submitError?: string | null
+  deleteError?: string | null
+  startInDeleteConfirm?: boolean
   onClose: () => void
   onSubmit: (values: ClientFormValues) => Promise<void>
+  onDelete?: () => Promise<void>
 }
 
 const defaultValues: ClientFormValues = {
@@ -63,21 +76,29 @@ export function ClientModal({
   isOpen,
   client,
   isSubmitting,
+  isDeleting = false,
   submitError,
+  deleteError,
+  startInDeleteConfirm = false,
   onClose,
-  onSubmit
+  onSubmit,
+  onDelete
 }: ClientModalProps) {
   const [values, setValues] = useState<ClientFormValues>(defaultValues)
   const [errors, setErrors] = useState<Partial<Record<keyof ClientFormValues, string>>>({})
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false)
 
   const modalTitle = useMemo(() => (mode === 'add' ? 'Add patient' : 'Edit patient'), [mode])
+  const isBusy = isSubmitting || isDeleting
+  const canDelete = mode === 'edit' && Boolean(client) && Boolean(onDelete)
 
   useEffect(() => {
     if (isOpen) {
       setValues(toValues(client))
       setErrors({})
+      setIsConfirmingDelete(mode === 'edit' && startInDeleteConfirm)
     }
-  }, [client, isOpen])
+  }, [client, isOpen, mode, startInDeleteConfirm])
 
   const onFieldChange = (field: keyof ClientFormValues, value: string) => {
     const nextValue = field === 'petType' ? (value as PetType) : value
@@ -105,33 +126,75 @@ export function ClientModal({
     await onSubmit(values)
   }
 
+  const onDeleteClick = async () => {
+    if (!canDelete || !onDelete) {
+      return
+    }
+
+    if (!isConfirmingDelete) {
+      setIsConfirmingDelete(true)
+      return
+    }
+
+    await onDelete()
+  }
+
+  const onModalClose = () => {
+    if (isBusy) {
+      return
+    }
+
+    onClose()
+  }
+
   return (
     <Dialog
       open={isOpen}
-      onClose={onClose}
+      onClose={onModalClose}
       fullWidth
       maxWidth='sm'
       transitionDuration={dialogTransitionDuration}
       PaperProps={{ className: 'motion-fade-in' }}
     >
-      <DialogTitle>{modalTitle}</DialogTitle>
+      <DialogTitle>
+        <div className='flex items-center justify-between gap-3'>
+          <span>{modalTitle}</span>
+          {canDelete && (
+            <IconButton
+              onClick={onDeleteClick}
+              disabled={isBusy}
+              aria-label={isConfirmingDelete ? 'confirm delete patient' : 'delete patient'}
+              color='error'
+              size='small'
+            >
+              <DeleteOutlineIcon fontSize='small' />
+            </IconButton>
+          )}
+        </div>
+      </DialogTitle>
       <form onSubmit={onFormSubmit}>
         <DialogContent dividers>
           <div className='grid gap-4'>
+            {isConfirmingDelete && canDelete && (
+              <Alert severity='warning'>
+                Click the delete icon again to permanently remove this patient.
+              </Alert>
+            )}
             <ClientFormFields
               values={values}
               errors={errors}
               onFieldChange={onFieldChange}
-              disabled={isSubmitting}
+              disabled={isBusy}
             />
             {submitError && <Alert severity='error'>{submitError}</Alert>}
+            {deleteError && <Alert severity='error'>{deleteError}</Alert>}
           </div>
         </DialogContent>
         <DialogActions>
-          <Button onClick={onClose} disabled={isSubmitting} variant='outlined' sx={subtleOutlineButtonSx}>
+          <Button onClick={onModalClose} disabled={isBusy} variant='outlined' sx={subtleOutlineButtonSx}>
             Close
           </Button>
-          <Button type='submit' disabled={isSubmitting} variant='contained'>
+          <Button type='submit' disabled={isBusy} variant='contained'>
             {isSubmitting ? 'Saving...' : mode === 'add' ? 'Add' : 'Save'}
           </Button>
         </DialogActions>

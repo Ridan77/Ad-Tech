@@ -32,6 +32,8 @@ Remaining gap:
 
 2. Default sorting behavior is inconsistent with the intended UX and produces the wrong initial order.
 
+Status: Resolved.
+
 The current UI does not default to `Name asc`. It defaults to `no client-side sort`, so the list falls back to backend order (`createdAt desc`), which is newest-first.
 
 - [clients-page.tsx](c:\Users\danri\Documents\קודינג אקדמי\Dev\Ad Tech\src\components\clients\clients-page.tsx:49) initializes `sortBy` as `null`.
@@ -40,7 +42,14 @@ The current UI does not default to `Name asc`. It defaults to `no client-side so
 
 If the intended behavior is the one agreed later in implementation, this is a functional regression.
 
+Update:
+- [clients-page.tsx](c:\Users\danri\Documents\קודינג אקדמי\Dev\Ad Tech\src\components\clients\clients-page.tsx) now initializes sorting with `sortBy = 'name'` and `sortDirection = 'asc'`.
+- This fixes the original regression: the first visible render now defaults to `Name asc`.
+- The UI still allows returning to `no client-side sort` after toggling, but this is now considered acceptable by decision and is not treated as a defect.
+
 3. The header and filter structure is not DRY: the column model is duplicated in two separate components.
+
+Status: Resolved.
 
 The table schema is defined twice, once for the filter header and once for the data table. That creates a maintenance risk because one change to column order, width, or labels can break alignment again.
 
@@ -51,7 +60,17 @@ The table schema is defined twice, once for the filter header and once for the d
 
 Best-practice fix: centralize column metadata in one shared constant and let both components consume it.
 
+Update:
+- The shared table schema now lives in [client-table-config.tsx](c:\Users\danri\Documents\קודינג אקדמי\Dev\Ad Tech\src\components\clients\client-table-config.tsx).
+- Both [client-filters.tsx](c:\Users\danri\Documents\קודינג אקדמי\Dev\Ad Tech\src\components\clients\client-filters.tsx) and [client-table.tsx](c:\Users\danri\Documents\קודינג אקדמי\Dev\Ad Tech\src\components\clients\client-table.tsx) now consume the same:
+  - column ids
+  - header labels
+  - column widths
+- The shared `ClientTableColGroup` now keeps desktop alignment stable from one source of truth.
+
 4. The edit and delete interaction diverges from the provided spec.
+
+Status: Resolved.
 
 The spec sketch shows delete as part of the edit modal. The current app uses a separate delete confirmation dialog, outside the edit modal flow.
 
@@ -59,6 +78,13 @@ The spec sketch shows delete as part of the edit modal. The current app uses a s
 - [delete-client-dialog.tsx](c:\Users\danri\Documents\קודינג אקדמי\Dev\Ad Tech\src\components\clients\delete-client-dialog.tsx:19) handles delete separately.
 
 This is not necessarily a UX bug, but it is a spec mismatch. For an interview task, exactness matters.
+
+Update:
+- Delete is now owned by [client-modal.tsx](c:\Users\danri\Documents\קודינג אקדמי\Dev\Ad Tech\src\components\clients\client-modal.tsx) and shown only in `edit` mode.
+- The delete control is now rendered in the modal header, closer to the spec sketch.
+- The delete flow keeps a two-step confirmation inside the same modal by using an inline warning state before the final destructive action.
+- Row delete actions now open the edit modal directly in delete-confirm mode via [clients-page.tsx](c:\Users\danri\Documents\קודינג אקדמי\Dev\Ad Tech\src\components\clients\clients-page.tsx).
+- The separate [delete-client-dialog.tsx](c:\Users\danri\Documents\קודינג אקדמי\Dev\Ad Tech\src\components\clients\delete-client-dialog.tsx) flow was removed.
 
 5. The mobile filter implementation still has structural debt and one obvious dead node.
 

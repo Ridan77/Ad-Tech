@@ -16,6 +16,12 @@ import {
   TextField
 } from '@mui/material'
 import { useMemo } from 'react'
+import {
+  ClientTableColGroup,
+  ClientTableColumnId,
+  clientTableColumns,
+  isSortableClientColumn
+} from '@/components/clients/client-table-config'
 import { compactFieldSx, getSortButtonSx, subtleOutlineButtonSx } from '@/lib/styles/mui'
 import { ClientFilters, ClientSortBy, ClientSortDirection, PetType } from '@/types/client'
 
@@ -56,14 +62,21 @@ export function ClientFiltersPanel({
     onChange({ ...value, petTypes: petTypes.length > 0 ? petTypes : undefined })
 
   const columns = useMemo<ColumnDef<ClientFilters>[]>(
-    () => [
-      { accessorKey: 'name', header: 'Name' },
-      { id: 'phone', header: 'Phone' },
-      { accessorKey: 'petName', header: 'Pet Name' },
-      { id: 'petAge', header: 'Pet Age' },
-      { id: 'petType', header: 'Pet Type' },
-      { id: 'actions', header: 'Actions' }
-    ],
+    () =>
+      clientTableColumns.map((column) => {
+        if (column.id === 'name' || column.id === 'petName') {
+          return {
+            id: column.id,
+            accessorKey: column.id,
+            header: column.header
+          }
+        }
+
+        return {
+          id: column.id,
+          header: column.header
+        }
+      }),
     []
   )
 
@@ -79,14 +92,7 @@ export function ClientFiltersPanel({
     <div className="surface-card motion-fade-in overflow-hidden">
       <div className="hidden md:block">
         <table className="w-full table-fixed border-collapse text-left text-sm">
-          <colgroup>
-            <col className="w-[17%]" />
-            <col className="w-[17%]" />
-            <col className="w-[17%]" />
-            <col className="w-[12%]" />
-            <col className="w-[17%]" />
-            <col className="w-[20%]" />
-          </colgroup>
+          <ClientTableColGroup />
           <thead className="text-slate-700">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id} className="bg-slate-50/80">
@@ -97,7 +103,7 @@ export function ClientFiltersPanel({
                   >
                     {header.isPlaceholder ? null : (
                       <div className="flex items-center gap-1">
-                        {(header.id === 'name' || header.id === 'petName') && (
+                        {isSortableClientColumn(header.id as ClientTableColumnId) && (
                           <ButtonBase
                             onClick={() => onSortToggle(header.id as 'name' | 'petName')}
                             className="group flex items-center gap-1 rounded px-1 py-0.5 text-left"
@@ -110,7 +116,7 @@ export function ClientFiltersPanel({
                             </span>
                           </ButtonBase>
                         )}
-                        {header.id !== 'name' && header.id !== 'petName' && (
+                        {!isSortableClientColumn(header.id as ClientTableColumnId) && (
                           <span>
                             {flexRender(header.column.columnDef.header, header.getContext())}
                           </span>

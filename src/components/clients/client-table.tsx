@@ -10,6 +10,7 @@ import {
   useReactTable
 } from '@tanstack/react-table'
 import { useMemo } from 'react'
+import { ClientTableColGroup, clientTableColumns } from '@/components/clients/client-table-config'
 import { ClientRecord } from '@/types/client'
 
 type ClientTableProps = {
@@ -51,59 +52,63 @@ export function ClientTable({
   onDelete
 }: ClientTableProps) {
   const columns = useMemo<ColumnDef<ClientRecord>[]>(
-    () => [
-      {
-        accessorKey: 'name',
-        header: 'Name'
-      },
-      {
-        accessorKey: 'phone',
-        header: 'Phone'
-      },
-      {
-        accessorKey: 'petName',
-        header: 'Pet Name'
-      },
-      {
-        id: 'petAge',
-        header: 'Pet Age',
-        cell: ({ row }) => getPetAge(row.original.petBirthDate)
-      },
-      {
-        accessorKey: 'petType',
-        header: 'Pet Type',
-        cell: ({ row }) => <span className='capitalize'>{row.original.petType}</span>
-      },
-      {
-        id: 'actions',
-        header: 'Actions',
-        cell: ({ row }) => (
-          <div className='flex items-center gap-1'>
-            <Tooltip title='Edit'>
-              <IconButton
-                size='small'
-                onClick={() => onEdit(row.original)}
-                aria-label='edit'
-                className='action-hover'
-              >
-                <EditOutlinedIcon fontSize='small' />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title='Delete'>
-              <IconButton
-                size='small'
-                onClick={() => onDelete(row.original)}
-                aria-label='delete'
-                color='error'
-                className='action-hover'
-              >
-                <DeleteOutlineIcon fontSize='small' />
-              </IconButton>
-            </Tooltip>
-          </div>
-        )
-      }
-    ],
+    () =>
+      clientTableColumns.map((column) => {
+        if (column.id === 'name' || column.id === 'phone' || column.id === 'petName') {
+          return {
+            id: column.id,
+            accessorKey: column.id,
+            header: column.header
+          }
+        }
+
+        if (column.id === 'petAge') {
+          return {
+            id: column.id,
+            header: column.header,
+            cell: ({ row }) => getPetAge(row.original.petBirthDate)
+          }
+        }
+
+        if (column.id === 'petType') {
+          return {
+            id: column.id,
+            accessorKey: column.id,
+            header: column.header,
+            cell: ({ row }) => <span className='capitalize'>{row.original.petType}</span>
+          }
+        }
+
+        return {
+          id: column.id,
+          header: column.header,
+          cell: ({ row }) => (
+            <div className='flex items-center gap-1'>
+              <Tooltip title='Edit'>
+                <IconButton
+                  size='small'
+                  onClick={() => onEdit(row.original)}
+                  aria-label='edit'
+                  className='action-hover'
+                >
+                  <EditOutlinedIcon fontSize='small' />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title='Delete'>
+                <IconButton
+                  size='small'
+                  onClick={() => onDelete(row.original)}
+                  aria-label='delete'
+                  color='error'
+                  className='action-hover'
+                >
+                  <DeleteOutlineIcon fontSize='small' />
+                </IconButton>
+              </Tooltip>
+            </div>
+          )
+        }
+      }),
     [onDelete, onEdit]
   )
 
@@ -141,14 +146,7 @@ export function ClientTable({
     <>
       <div className='surface-card motion-fade-in hidden overflow-hidden md:block'>
         <table className='w-full table-fixed text-left text-sm'>
-          <colgroup>
-            <col className='w-[17%]' />
-            <col className='w-[17%]' />
-            <col className='w-[17%]' />
-            <col className='w-[12%]' />
-            <col className='w-[17%]' />
-            <col className='w-[20%]' />
-          </colgroup>
+          <ClientTableColGroup />
           <tbody>
             {table.getRowModel().rows.map(row => (
               <tr key={row.id} className='motion-fade-up border-t border-slate-200 hover:bg-slate-50/60'>

@@ -9,12 +9,12 @@ import { ClientFiltersPanel } from '@/components/clients/client-filters'
 import { ClientTable } from '@/components/clients/client-table'
 import { ClientModal } from '@/components/clients/client-modal'
 import { ClientFormValues } from '@/components/clients/client-form-fields'
-import { DeleteClientDialog } from '@/components/clients/delete-client-dialog'
 
 type ModalState = {
   mode: 'add' | 'edit'
   isOpen: boolean
   client: ClientRecord | null
+  startInDeleteConfirm: boolean
 }
 
 function getErrorMessage(error: unknown): string {
@@ -41,14 +41,14 @@ function compareStrings(left: string, right: string): number {
 export function ClientsPage() {
   const [filters, setFilters] = useState<ClientFilters>({})
   const [debouncedFilters, setDebouncedFilters] = useState<ClientFilters>({})
-  const [sortBy, setSortBy] = useState<ClientSortBy>(null)
+  const [sortBy, setSortBy] = useState<ClientSortBy>('name')
   const [sortDirection, setSortDirection] = useState<ClientSortDirection>('asc')
   const [modalState, setModalState] = useState<ModalState>({
     mode: 'add',
     isOpen: false,
-    client: null
+    client: null,
+    startInDeleteConfirm: false
   })
-  const [deleteTarget, setDeleteTarget] = useState<ClientRecord | null>(null)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [deleteError, setDeleteError] = useState<string | null>(null)
 
@@ -93,7 +93,8 @@ export function ClientsPage() {
     setModalState({
       mode: 'add',
       isOpen: true,
-      client: null
+      client: null,
+      startInDeleteConfirm: false
     })
   }
 
@@ -102,28 +103,17 @@ export function ClientsPage() {
     setModalState({
       mode: 'edit',
       isOpen: true,
-      client
+      client,
+      startInDeleteConfirm: false
     })
   }
 
   const onCloseModal = () => {
-    if (createClientMutation.isPending || updateClientMutation.isPending) {
+    if (createClientMutation.isPending || updateClientMutation.isPending || deleteClientMutation.isPending) {
       return
     }
-    setModalState((prev) => ({ ...prev, isOpen: false }))
+    setModalState((prev) => ({ ...prev, isOpen: false, startInDeleteConfirm: false }))
     setSubmitError(null)
-  }
-
-  const onOpenDeleteDialog = (client: ClientRecord) => {
-    setDeleteError(null)
-    setDeleteTarget(client)
-  }
-
-  const onCloseDeleteDialog = () => {
-    if (deleteClientMutation.isPending) {
-      return
-    }
-    setDeleteTarget(null)
     setDeleteError(null)
   }
 
@@ -158,21 +148,37 @@ export function ClientsPage() {
         })
       }
 
-      setModalState((prev) => ({ ...prev, isOpen: false }))
+      setModalState((prev) => ({ ...prev, isOpen: false, startInDeleteConfirm: false }))
     } catch (error) {
       setSubmitError(getErrorMessage(error))
     }
   }
 
+  const onOpenDeleteFromTable = (client: ClientRecord) => {
+    setDeleteError(null)
+    setSubmitError(null)
+    setModalState({
+      mode: 'edit',
+      isOpen: true,
+      client,
+      startInDeleteConfirm: true
+    })
+  }
+
   const onConfirmDelete = async () => {
-    if (!deleteTarget) {
+    if (!modalState.client) {
       return
     }
 
     setDeleteError(null)
     try {
-      await deleteClientMutation.mutateAsync(deleteTarget.id)
-      setDeleteTarget(null)
+      await deleteClientMutation.mutateAsync(modalState.client.id)
+      setModalState({
+        mode: 'add',
+        isOpen: false,
+        client: null,
+        startInDeleteConfirm: false
+      })
     } catch (error) {
       setDeleteError(getErrorMessage(error))
     }
@@ -228,7 +234,7 @@ export function ClientsPage() {
           isError={clientsQuery.isError}
           errorMessage={clientsQuery.isError ? getErrorMessage(clientsQuery.error) : undefined}
           onEdit={onOpenEditModal}
-          onDelete={onOpenDeleteDialog}
+          onDelete={onOpenDeleteFromTable}
         />
       </section>
 
@@ -237,18 +243,13 @@ export function ClientsPage() {
         isOpen={modalState.isOpen}
         client={modalState.client}
         isSubmitting={createClientMutation.isPending || updateClientMutation.isPending}
+        isDeleting={deleteClientMutation.isPending}
         submitError={submitError}
+        deleteError={deleteError}
+        startInDeleteConfirm={modalState.startInDeleteConfirm}
         onClose={onCloseModal}
         onSubmit={onSubmitModal}
-      />
-
-      <DeleteClientDialog
-        isOpen={Boolean(deleteTarget)}
-        isDeleting={deleteClientMutation.isPending}
-        submitError={deleteError}
-        clientName={deleteTarget?.name}
-        onCancel={onCloseDeleteDialog}
-        onConfirm={onConfirmDelete}
+        onDelete={modalState.mode === 'edit' ? onConfirmDelete : undefined}
       />
     </main>
   )
