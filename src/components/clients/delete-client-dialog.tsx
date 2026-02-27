@@ -1,6 +1,7 @@
 'use client'
 
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
+import { dialogTransitionDuration, subtleOutlineButtonSx } from '@/lib/styles/mui'
 
 type DeleteClientDialogProps = {
   isOpen: boolean
@@ -29,7 +30,7 @@ export function DeleteClientDialog({
       onClose={onCancel}
       fullWidth
       maxWidth='xs'
-      transitionDuration={{ enter: 180, exit: 120 }}
+      transitionDuration={dialogTransitionDuration}
       PaperProps={{ className: 'motion-fade-in' }}
     >
       <DialogTitle>Delete patient</DialogTitle>
@@ -44,7 +45,7 @@ export function DeleteClientDialog({
         )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onCancel} disabled={isDeleting} variant='outlined'>
+        <Button onClick={onCancel} disabled={isDeleting} variant='outlined' sx={subtleOutlineButtonSx}>
           Cancel
         </Button>
         <Button onClick={onDelete} disabled={isDeleting} color='error' variant='contained'>

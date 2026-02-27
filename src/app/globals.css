@@ -2,59 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  color-scheme: light;
-  --ui-border: #cbd5e1;
-  --ui-border-soft: #e2e8f0;
-  --ui-surface: #ffffff;
-  --ui-surface-soft: #f8fafc;
-  --ui-card: #eee8e8;
-}
-
 body {
-  @apply bg-canvas text-ink antialiased;
-  font-family: 'Segoe UI', Arial, sans-serif;
+  @apply bg-canvas font-sans text-ink antialiased;
 }
 
-.surface-card {
-  background: var(--ui-card);
-  border: 1px solid var(--ui-border-soft);
-  border-radius: 1rem;
-}
-
-.motion-fade-up {
-  animation: fade-up 220ms ease-out;
-}
-
-.motion-fade-in {
-  animation: fade-in 180ms ease-out;
-}
-
-.action-hover {
-  transition: transform 120ms ease, opacity 120ms ease;
-}
-
-.action-hover:hover {
-  transform: translateY(-1px);
-}
-
-@keyframes fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(5px);
+@layer components {
+  .surface-card {
+    @apply rounded-2xl border;
+    border-color: theme('colors.stroke.soft');
+    background-color: theme('colors.surface.card');
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
-@keyframes fade-in {
-  from {
-    opacity: 0;
+  .motion-fade-up {
+    @apply animate-fade-up;
   }
-  to {
-    opacity: 1;
+
+  .motion-fade-in {
+    @apply animate-fade-in;
+  }
+
+  .action-hover {
+    transition: transform 120ms ease, opacity 120ms ease;
+  }
+
+  .action-hover:hover {
+    transform: translateY(-1px);
   }
 }
 
@@ -66,8 +38,4 @@ body {
     transition: none !important;
     transform: none !important;
   }
-}
-
-.green{
-  background-color: green;
 }

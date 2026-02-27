@@ -4,6 +4,7 @@ import { FormEvent, useEffect, useMemo, useState } from 'react'
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import { ClientRecord, PetType } from '@/types/client'
 import { ClientFormFields, ClientFormValues } from '@/components/clients/client-form-fields'
+import { dialogTransitionDuration, subtleOutlineButtonSx } from '@/lib/styles/mui'
 
 type ClientModalProps = {
   mode: 'add' | 'edit'
@@ -110,7 +111,7 @@ export function ClientModal({
       onClose={onClose}
       fullWidth
       maxWidth='sm'
-      transitionDuration={{ enter: 180, exit: 120 }}
+      transitionDuration={dialogTransitionDuration}
       PaperProps={{ className: 'motion-fade-in' }}
     >
       <DialogTitle>{modalTitle}</DialogTitle>
@@ -127,7 +128,7 @@ export function ClientModal({
           </div>
         </DialogContent>
         <DialogActions>
-          <Button onClick={onClose} disabled={isSubmitting} variant='outlined'>
+          <Button onClick={onClose} disabled={isSubmitting} variant='outlined' sx={subtleOutlineButtonSx}>
             Close
           </Button>
           <Button type='submit' disabled={isSubmitting} variant='contained'>

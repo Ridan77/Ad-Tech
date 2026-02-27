@@ -9,19 +9,17 @@ type AppProvidersProps = {
   children: ReactNode
 }
 
-export function AppProviders({ children }: AppProvidersProps) {
-  const [theme] = useState(() =>
-    createTheme({
-      typography: {
-        fontFamily: "'Segoe UI', 'Arial', sans-serif",
-        fontSize: 14
-      },
-      shape: {
-        borderRadius: 10
-      }
-    })
-  )
+const appTheme = createTheme({
+  typography: {
+    fontFamily: "'Segoe UI', 'Arial', sans-serif",
+    fontSize: 14
+  },
+  shape: {
+    borderRadius: 10
+  }
+})
 
+export function AppProviders({ children }: AppProvidersProps) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -36,7 +34,7 @@ export function AppProviders({ children }: AppProvidersProps) {
   )
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={appTheme}>
       <CssBaseline />
       <QueryClientProvider client={queryClient}>
         {children}

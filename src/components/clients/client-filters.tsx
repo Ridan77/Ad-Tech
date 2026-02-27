@@ -16,6 +16,7 @@ import {
   TextField
 } from '@mui/material'
 import { useMemo } from 'react'
+import { compactFieldSx, getSortButtonSx, subtleOutlineButtonSx } from '@/lib/styles/mui'
 import { ClientFilters, ClientSortBy, ClientSortDirection, PetType } from '@/types/client'
 
 type ClientFiltersProps = {
@@ -28,15 +29,6 @@ type ClientFiltersProps = {
 }
 
 const petTypeOptions: PetType[] = ['dog', 'cat', 'parrot']
-const compactSx = {
-  '& .MuiInputBase-root': {
-    minHeight: 34,
-    fontSize: 13
-  },
-  '& .MuiInputLabel-root': {
-    fontSize: 12
-  }
-}
 
 function SortIcon({ active, direction }: { active: boolean; direction: ClientSortDirection }) {
   if (!active) {
@@ -140,7 +132,7 @@ export function ClientFiltersPanel({
                           label="Search Client"
                           value={value.name || ''}
                           onChange={(event) => onNameChange(event.target.value)}
-                          sx={compactSx}
+                          sx={compactFieldSx}
                           fullWidth
                         />
                       </th>
@@ -155,7 +147,7 @@ export function ClientFiltersPanel({
                           label="Search Pet"
                           value={value.petName || ''}
                           onChange={(event) => onPetNameChange(event.target.value)}
-                          sx={compactSx}
+                          sx={compactFieldSx}
                           fullWidth
                         />
                       </th>
@@ -165,7 +157,7 @@ export function ClientFiltersPanel({
                   if (header.id === 'petType') {
                     return (
                       <th key={header.id} className="px-4 py-2">
-                        <FormControl size="small" fullWidth sx={compactSx}>
+                        <FormControl size="small" fullWidth sx={compactFieldSx}>
                           <InputLabel id="desktop-pet-type-label">Pet Type</InputLabel>
                           <Select
                             labelId="desktop-pet-type-label"
@@ -202,14 +194,7 @@ export function ClientFiltersPanel({
                           onClick={onClear}
                           variant="outlined"
                           size="small"
-                          sx={{
-                            color: '#475569',
-                            borderColor: '#cbd5e1',
-                            '&:hover': {
-                              borderColor: '#94a3b8',
-                              backgroundColor: '#f8fafc'
-                            }
-                          }}
+                          sx={subtleOutlineButtonSx}
                         >
                           Clear
                         </Button>
@@ -232,15 +217,9 @@ export function ClientFiltersPanel({
             onClick={() => onSortToggle('name')}
             variant="outlined"
             size="small"
-            sx={{
-              justifyContent: 'space-between',
-              color: sortBy === 'name' ? '#1f2937' : '#64748b',
-              borderColor: '#cbd5e1',
-              textTransform: 'none',
-              height: 35
-            }}
+            sx={getSortButtonSx(sortBy === 'name')}
           >
-            Sort by client 
+            Sort by client
             <SortIcon active={sortBy === 'name'} direction={sortDirection} />
           </Button>
           <Button
@@ -248,15 +227,9 @@ export function ClientFiltersPanel({
             onClick={() => onSortToggle('petName')}
             variant="outlined"
             size="small"
-            sx={{
-              justifyContent: 'space-between',
-              color: sortBy === 'petName' ? '#1f2937' : '#64748b',
-              borderColor: '#cbd5e1',
-              textTransform: 'none',
-              height: 35
-            }}
+            sx={getSortButtonSx(sortBy === 'petName')}
           >
-            Sort by pet 
+            Sort by pet
             <SortIcon active={sortBy === 'petName'} direction={sortDirection} />
           </Button>
         </div>
@@ -267,7 +240,7 @@ export function ClientFiltersPanel({
             label="Search Client"
             value={value.name || ''}
             onChange={(event) => onNameChange(event.target.value)}
-            sx={compactSx}
+            sx={compactFieldSx}
             fullWidth
           />
           <TextField
@@ -275,12 +248,11 @@ export function ClientFiltersPanel({
             label="Search Pet"
             value={value.petName || ''}
             onChange={(event) => onPetNameChange(event.target.value)}
-            sx={compactSx}
+            sx={compactFieldSx}
             fullWidth
           />
 
-          <div className="grid grid-cols-2 gap-2"></div>
-          <FormControl size="small" fullWidth sx={compactSx}>
+          <FormControl size="small" fullWidth sx={compactFieldSx}>
             <InputLabel id="mobile-pet-type-label">Pet Type</InputLabel>
             <Select
               labelId="mobile-pet-type-label"
@@ -307,14 +279,7 @@ export function ClientFiltersPanel({
             onClick={onClear}
             variant="outlined"
             size="small"
-            sx={{
-              color: '#475569',
-              borderColor: '#cbd5e1',
-              '&:hover': {
-                borderColor: '#94a3b8',
-                backgroundColor: '#f8fafc'
-              }
-            }}
+            sx={subtleOutlineButtonSx}
           >
             Clear
           </Button>

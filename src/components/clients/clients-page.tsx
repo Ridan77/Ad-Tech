@@ -2,12 +2,7 @@
 
 import { Button } from '@mui/material'
 import { useEffect, useMemo, useState } from 'react'
-import {
-  ClientFilters,
-  ClientRecord,
-  ClientSortBy,
-  ClientSortDirection
-} from '@/types/client'
+import { ClientFilters, ClientRecord, ClientSortBy, ClientSortDirection } from '@/types/client'
 import { useClientsQuery } from '@/hooks/use-clients-query'
 import { useClientMutations } from '@/hooks/use-client-mutations'
 import { ClientFiltersPanel } from '@/components/clients/client-filters'
@@ -90,7 +85,7 @@ export function ClientsPage() {
         // Stable fallback for equal values
         return left.index - right.index
       })
-      .map(item => item.client)
+      .map((item) => item.client)
   }, [clients, sortBy, sortDirection])
 
   const onOpenAddModal = () => {
@@ -115,7 +110,7 @@ export function ClientsPage() {
     if (createClientMutation.isPending || updateClientMutation.isPending) {
       return
     }
-    setModalState(prev => ({ ...prev, isOpen: false }))
+    setModalState((prev) => ({ ...prev, isOpen: false }))
     setSubmitError(null)
   }
 
@@ -163,7 +158,7 @@ export function ClientsPage() {
         })
       }
 
-      setModalState(prev => ({ ...prev, isOpen: false }))
+      setModalState((prev) => ({ ...prev, isOpen: false }))
     } catch (error) {
       setSubmitError(getErrorMessage(error))
     }
@@ -204,14 +199,16 @@ export function ClientsPage() {
   }
 
   return (
-    <main className='mx-auto min-h-screen max-w-6xl p-4 md:p-8'>
-      <section className='grid gap-4 md:gap-5'>
-        <div className='surface-card motion-fade-up flex flex-col gap-3 p-4 shadow-soft md:flex-row md:items-center md:justify-between md:p-6'>
+    <main className="mx-auto min-h-screen max-w-6xl p-4 md:p-8">
+      <section className="grid gap-4 md:gap-5">
+        <div className="surface-card motion-fade-up flex flex-col gap-3 p-4 shadow-soft md:flex-row md:items-center md:justify-between md:p-6">
           <div>
-            <h1 className='text-2xl font-semibold tracking-tight text-brand-700'>Pet Clinic Management</h1>
-            <p className='mt-1 text-sm text-slate-600'>Manage clinic patients in one place</p>
+            <h1 className="text-2xl font-semibold tracking-tight text-brand-700">
+              Pet Clinic Management
+            </h1>
+            <p className="mt-1 text-sm text-slate-600">Manage clinic patients in one place</p>
           </div>
-          <Button type='button' onClick={onOpenAddModal} variant='contained'>
+          <Button type="button" onClick={onOpenAddModal} variant="contained">
             + Add patient
           </Button>
         </div>

@@ -6,6 +6,8 @@ Prepared for the Pet Clinic Management Application submission.
 
 1. The implementation does not fully meet the task requirement to use Tailwind CSS exclusively.
 
+Status: Partially resolved on purpose.
+
 This is the biggest criteria miss. The task explicitly says `Use Tailwind CSS exclusively`, but the UI layer relies on MUI components plus MUI `sx` styling and MUI theming, not just Tailwind utility classes.
 
 Relevant examples:
@@ -15,6 +17,18 @@ Relevant examples:
 - [globals.css](c:\Users\danri\Documents\קודינג אקדמי\Dev\Ad Tech\src\app\globals.css:5) defines custom CSS tokens and component-like classes outside Tailwind.
 
 This is also a best-practice issue because styling is now split across Tailwind, MUI theme, MUI `sx`, and raw CSS, which increases maintenance cost.
+
+Update:
+- MUI remains intentionally in use because the task explicitly recommends it and the implementation relies on it for dialogs, inputs, and selects.
+- The styling layer has been consolidated:
+  - repeated MUI `sx` fragments were centralized in [mui.ts](c:\Users\danri\Documents\קודינג אקדמי\Dev\Ad Tech\src\lib\styles\mui.ts)
+  - [globals.css](c:\Users\danri\Documents\קודינג אקדמי\Dev\Ad Tech\src\app\globals.css) was reduced and now uses Tailwind tokens instead of custom CSS variables
+  - [tailwind.config.ts](c:\Users\danri\Documents\קודינג אקדמי\Dev\Ad Tech\tailwind.config.ts) now contains the shared surface, stroke, font, and animation tokens
+  - the MUI provider remains, but its theme is now kept as a static app-level concern in [app-providers.tsx](c:\Users\danri\Documents\קודינג אקדמי\Dev\Ad Tech\src\providers\app-providers.tsx)
+
+Remaining gap:
+- The project is still not literally Tailwind-only because MUI is still part of the rendering layer.
+- Given the task also recommends MUI, this is now treated as an intentional architectural tradeoff rather than an unbounded styling mix.
 
 2. Default sorting behavior is inconsistent with the intended UX and produces the wrong initial order.
 
