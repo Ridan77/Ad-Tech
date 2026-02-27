@@ -2,7 +2,7 @@
 
 Prepared by Dan Ribak
 
-Single-page Pet Clinic client management application built for an interview task.
+Single-page Pet Clinic client management application.
 
 ## Overview
 
