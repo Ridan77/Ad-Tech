@@ -3,7 +3,6 @@
 import { ReactNode, useState } from 'react'
 import { createTheme, CssBaseline, ThemeProvider } from '@mui/material'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 type AppProvidersProps = {
   children: ReactNode
@@ -38,7 +37,6 @@ export function AppProviders({ children }: AppProvidersProps) {
       <CssBaseline />
       <QueryClientProvider client={queryClient}>
         {children}
-        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </ThemeProvider>
   )

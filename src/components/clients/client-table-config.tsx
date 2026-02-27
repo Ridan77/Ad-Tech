@@ -58,6 +58,4 @@ export function isSortableClientColumn(id: ClientTableColumnId): boolean {
   return clientTableColumns.some((column) => column.id === id && column.sortable)
 }
 
-export function getClientTableHeader(id: ClientTableColumnId): ReactNode {
-  return clientTableColumns.find((column) => column.id === id)?.header || null
-}
+

@@ -155,6 +155,14 @@ npm run dev
 http://localhost:3000
 ```
 
+## Deployment
+
+- Live app (Render): https://ad-tech.onrender.com/
+
+## Repository
+
+- GitHub: https://github.com/Ridan77/Ad-Tech
+
 ## Useful Scripts
 
 - `npm run dev`
@@ -211,6 +219,5 @@ Core flows were validated:
 - The UI combines Tailwind for layout and MUI for form/dialog primitives
 
 
-https://ad-tech.onrender.com/
 
 Prepared by Dan Ribak
