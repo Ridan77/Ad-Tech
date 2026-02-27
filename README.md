@@ -217,6 +217,7 @@ Core flows were validated:
 - Frontend sorting is intentionally client-side
 - Filtering is intentionally server-driven
 - The UI combines Tailwind for layout and MUI for form/dialog primitives
+- Tailwind is the primary styling layer for layout, spacing, and shared design tokens. MUI is used intentionally as a recommended package from the task for form and dialog primitives, which keeps accessibility and implementation speed strong while preserving Tailwind control over the overall visual system.
 
 
 
